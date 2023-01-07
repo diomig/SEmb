@@ -46,6 +46,7 @@
 #include "led_task.h"
 #include "switch_task.h"
 #include "keypad_task.h"
+#include "menu_task.h"
 
 //*****************************************************************************
 //
@@ -90,12 +91,6 @@ void DebounceHandler();
 
 void pinConfiguration(void);
 void timerConfiguration(void);
-int date_setup(void);
-int time_setup(void);
-int8_t getColumn(uint8_t rowbits);
-int8_t getRow(uint8_t colbits);
-int8_t bitsToIndex(int8_t bits);
-void menu(void);
 
 //*****************************************************************************
 //
@@ -135,41 +130,7 @@ vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName)
     }
 }
 
-//*****************************************************************************
-//
-// Configure the UART and its pins.  This must be called before UARTprintf().
-//
-//*****************************************************************************
-void
-ConfigureUART(void)
-{
-    //
-    // Enable the GPIO Peripheral used by the UART.
-    //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
 
-    //
-    // Enable UART0
-    //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
-
-    //
-    // Configure GPIO Pins for UART mode.
-    //
-    ROM_GPIOPinConfigure(GPIO_PA0_U0RX);
-    ROM_GPIOPinConfigure(GPIO_PA1_U0TX);
-    ROM_GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-
-    //
-    // Use the internal 16MHz oscillator as the UART clock source.
-    //
-    UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
-
-    //
-    // Initialize the UART for console I/O.
-    //
-    UARTStdioConfig(0, 115200, 16000000);
-}
 
 //*****************************************************************************
 //
@@ -190,33 +151,20 @@ main(void)
     lcd_clear();
     lcd_put_cur(0);
 
-    //
-    // Initialize the UART and configure it for 115,200, 8-N-1 operation.
-    //
-    ConfigureUART();
 
     // Print demo introduction.
-    UARTprintf("\n\nWelcome to the EK-TM4C123GXL FreeRTOS Demo!\n");
+    //printf("\n\nWelcome to the EK-TM4C123GXL FreeRTOS Demo!\n");
 
 
-    // Create a mutex to guard the UART.
-    g_pUARTSemaphore = xSemaphoreCreateMutex();
-
-    // Create the LED task.
-    if(LEDTaskInit() != 0)
-    {
-        while(1)
-        {
-        }
+    // Create the Keypad task.
+    if(!KeypadTaskInit()) {
+        while(1) {}
     }
 
 
-    // Create the switch task.
-    if(SwitchTaskInit() != 0)
-    {
-        while(1)
-        {
-        }
+    // Create the menu task.
+    if(!MenuTaskInit()) {
+        while(1) {}
     }
 
 
@@ -249,7 +197,6 @@ void pinConfiguration(void) {
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
 
-
         GPIOIntTypeSet(GPIO_PORTD_BASE, 0x0F, GPIO_RISING_EDGE);
         GPIOIntRegister(GPIO_PORTD_BASE, KeypadInterruptHandler);
         GPIOIntEnable(GPIO_PORTD_BASE, 0x0F);
@@ -279,91 +226,19 @@ void timerConfiguration(void) {
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
     TimerClockSourceSet(TIMER0_BASE, TIMER_CLOCK_SYSTEM);
     TimerConfigure(TIMER0_BASE, TIMER_CFG_ONE_SHOT);
-    TimerPrescaleSet(TIMER0_BASE, TIMER_A, 0xFFFF);
-    //TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
+    TimerPrescaleSet(TIMER0_BASE, TIMER_A, 0xFFFFFFFF);
+
     TimerIntRegister(TIMER0_BASE, TIMER_A, DebounceHandler);
     TimerEnable(TIMER0_BASE, TIMER_A);
-
-}
-
-int date_setup(void){
-    int len = 0;
-    int date;
-    int position[8] = {6,7,9,10,12,13,14,15};
-    int ord_mag[8] = {100000,10000,10000000,100000000,1000,100,10,1};
-    lcd_clear();
-    lcd_put_cur(0);
-    lcd_send_string("Date: MM/DD/YYYY");
-    for(len = 0; len < 8; len++) {
-        lcd_put_cur(position[len]);
-        while(!key);
-        if(key == 'C'){
-            len -= 2;
-            if(len<0){len=-1;}
-        }
-        else if(key < 'A'){
-            lcd_send_data(key);
-            date = (key - '0')*ord_mag[len];
-        }
-        key=0;
-    }
-    return date;
-}
-int time_setup(void){
-    int len = 0;
-    int time;
-    int position[6] = {6,7,9,10,12,13};
-    int ord_mag[6] = {100000,10000,1000,100,10,1};
-    lcd_clear();
-    lcd_put_cur(0);
-    lcd_send_string("Time: hh:mm:ss");
-    for(len = 0; len < 6; len++) {
-        lcd_put_cur(position[len]);
-        while(!key);
-        if(key == 'C'){
-            len -= 2;
-            if(len<0){len=-1;}
-        }
-        else if(key < 'A'){
-            lcd_send_data(key);
-            time = (key - '0') * ord_mag[len];
-        }
-        key=0;
-    }
-    return time;
+    //TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
 }
 
 
+void DebounceHandler(){
+    //TimerIntClear(TIMER0_BASE, TIMER_A);
+    TimerDisable(TIMER0_BASE, TIMER_A);
+    TimerIntDisable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
 
-void menu(void){
-    if (key==0) {return;}
-
-    switch(key){
-    case 'A':
-        lcd_put_cur(0);
-        lcd_send_string("Action A");
-        break;
-    case 'B':
-        lcd_put_cur(0);
-        lcd_send_string("Action B");
-        break;
-    case 'C':
-        lcd_clear();
-        break;
-    case 'D':
-        lcd_put_cur(0);
-        lcd_send_string("Action D");
-        break;
-    case 'E':
-        lcd_put_cur(0);
-        lcd_send_string("Action E");
-        break;
-    case 'F':
-        lcd_put_cur(0);
-        lcd_send_string("Action F");
-        break;
-    default:
-        lcd_send_data(key);
-    }
-    key = 0;
+    GPIOIntEnable(GPIO_PORTD_BASE, 0x0F);   //reactivate keypad interrupts
 }
+

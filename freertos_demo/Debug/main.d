@@ -41,6 +41,7 @@ main.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/interrupt.h
 main.obj: ../led_task.h
 main.obj: ../switch_task.h
 main.obj: ../keypad_task.h
+main.obj: ../menu_task.h
 
 ../main.c:
 
@@ -123,4 +124,6 @@ C:/ti/tivaware_c_series_2_1_4_178/driverlib/interrupt.h:
 ../switch_task.h:
 
 ../keypad_task.h:
+
+../menu_task.h:
 

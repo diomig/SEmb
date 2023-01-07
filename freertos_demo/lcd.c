@@ -27,9 +27,9 @@ void send_to_lcd (char data, int rs)
      * if the LCD still doesn't work, increase the delay to 50, 80 or 100..
      */
     GPIOPinWrite(EN_PORT, EN_Pin, EN_Pin);
-    delay_ms (20);
+    delay_ms (10);
     GPIOPinWrite(EN_PORT, EN_Pin, 0);
-    delay_ms (20);
+    delay_ms (1);
 }
 
 void lcd_send_cmd (char cmd)
