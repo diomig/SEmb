@@ -1,3 +1,4 @@
+"./actuator_task.obj"
 "./i2c.obj"
 "./keypad_task.obj"
 "./lcd.obj"

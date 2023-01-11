@@ -9,6 +9,7 @@ CMD_SRCS += \
 ../freertos_demo_ccs.cmd 
 
 C_SRCS += \
+../actuator_task.c \
 ../i2c.c \
 ../keypad_task.c \
 ../lcd.c \
@@ -19,6 +20,7 @@ C_SRCS += \
 ../temp_task.c 
 
 C_DEPS += \
+./actuator_task.d \
 ./i2c.d \
 ./keypad_task.d \
 ./lcd.d \
@@ -29,6 +31,7 @@ C_DEPS += \
 ./temp_task.d 
 
 OBJS += \
+./actuator_task.obj \
 ./i2c.obj \
 ./keypad_task.obj \
 ./lcd.obj \
@@ -39,6 +42,7 @@ OBJS += \
 ./temp_task.obj 
 
 OBJS__QUOTED += \
+"actuator_task.obj" \
 "i2c.obj" \
 "keypad_task.obj" \
 "lcd.obj" \
@@ -49,6 +53,7 @@ OBJS__QUOTED += \
 "temp_task.obj" 
 
 C_DEPS__QUOTED += \
+"actuator_task.d" \
 "i2c.d" \
 "keypad_task.d" \
 "lcd.d" \
@@ -59,6 +64,7 @@ C_DEPS__QUOTED += \
 "temp_task.d" 
 
 C_SRCS__QUOTED += \
+"../actuator_task.c" \
 "../i2c.c" \
 "../keypad_task.c" \
 "../lcd.c" \

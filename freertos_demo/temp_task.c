@@ -29,6 +29,7 @@
 #include "keypad_task.h"
 #include "temp_task.h"
 #include "pwm.h"
+#include "actuator_task.h"
 
 #define TEMP_ITEM_SIZE sizeof(uint16_t)
 #define TEMP_QUEUE_SIZE 10
@@ -64,6 +65,7 @@ uint8_t MaxTEMP = 40;
 
 static void TempTask(void *pvParameters) {
     //uint16_t temp;
+    MESSAGE message;
     bool alarmON = true;
 
     LCDMutex = xSemaphoreCreateMutex();
@@ -82,8 +84,12 @@ static void TempTask(void *pvParameters) {
         motorTemp = ReadTemp();
         xSemaphoreGive(tempMutex);
 
+        //setFan(MaxTEMP);
+        message.msg_id = ID_MOTOR_DUTY_CYCLE;
+        message.msg_value = MaxTEMP
+        xQueueSend(msgQueue, )
 
-        checkLimits(&alarmON);
+//        checkLimits(&alarmON);
 
 
         vTaskDelay(500);

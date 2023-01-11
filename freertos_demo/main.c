@@ -159,8 +159,6 @@ main(void)
     lcd_put_cur(0);
     PWMInit();
 
-    // Print demo introduction.
-    //printf("\n\nWelcome to the EK-TM4C123GXL FreeRTOS Demo!\n");
 
 
     // Create the temperature control task.
@@ -178,7 +176,10 @@ main(void)
         while(1) {}
     }
 
-
+    // Create the actuator task.
+    if(!ActuatorTaskInit()) {
+        while(1) {}
+    }
 
     // Start the scheduler.  This should not return.
     vTaskStartScheduler();

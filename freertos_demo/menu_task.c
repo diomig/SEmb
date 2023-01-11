@@ -18,6 +18,7 @@
 #include "menu_task.h"
 #include "lcd.h"
 #include "i2c.h"
+#include "actuator_task.h"
 
 //*****************************************************************************
 //
@@ -27,7 +28,7 @@
 #define MENUTASKSTACKSIZE        1000         // Stack size in words
 
 
-
+extern xQueueHandle msgQueue;
 extern xQueueHandle keypadQueue;
 extern float motorTemp;
 extern uint8_t MinTEMP;
@@ -108,6 +109,8 @@ void menu(uint8_t key, int* resettime){
     temp = motorTemp;
     xSemaphoreGive(tempMutex);
 */
+    MESSAGE message;
+
     if (key==0) {return;}
 
     switch(key){
@@ -134,10 +137,33 @@ void menu(uint8_t key, int* resettime){
         lcd_clear();
         xSemaphoreGive(LCDMutex);
         break;
+
+        //---------------------------------------------------------------
+    case '1':
+        message.msg_id = 1;
+        message.msg_value = 20;
+        xQueueSend(msgQueue, &message, 0);
+        break;
+    case '2':
+        message.msg_id = 1;
+        message.msg_value = 50;
+        xQueueSend(msgQueue, &message, 0);
+        break;
+    case '3':
+        message.msg_id = 1;
+        message.msg_value = 70;
+        xQueueSend(msgQueue, &message, 0);
+        break;
+    case '4':
+        message.msg_id = 2;
+        message.msg_value = 500;
+        xQueueSend(msgQueue, &message, 0);
+        break;
+
     default:
         //xSemaphoreTake(LCDMutex, portMAX_DELAY);
         //lcd_send_data(key);
-        showTime(getTime(*resettime));
+        //showTime(getTime(*resettime));
         //xSemaphoreGive(LCDMutex);
 
     }
