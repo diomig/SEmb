@@ -30,10 +30,9 @@
 // The priorities of the various tasks.
 //
 //*****************************************************************************
-#define PRIORITY_SWITCH_TASK    2
-#define PRIORITY_LED_TASK       1
+
 #define PRIORITY_KEYPAD_TASK    2
 #define PRIORITY_MENU_TASK      1
-
+#define PRIORITY_TEMP_TASK      1
 
 #endif // __PRIORITIES_H__

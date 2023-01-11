@@ -38,10 +38,14 @@ main.obj: C:/ti/tivaware_c_series_2_1_4_178/inc/hw_ints.h
 main.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/debug.h
 main.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/timer.h
 main.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/interrupt.h
-main.obj: ../led_task.h
-main.obj: ../switch_task.h
+main.obj: C:/ti/tivaware_c_series_2_1_4_178/inc/hw_pwm.h
+main.obj: C:/ti/tivaware_c_series_2_1_4_178/inc/hw_sysctl.h
+main.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/pwm.h
+main.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/rom_map.h
 main.obj: ../keypad_task.h
 main.obj: ../menu_task.h
+main.obj: ../temp_task.h
+main.obj: ../pwm.h
 
 ../main.c:
 
@@ -119,11 +123,19 @@ C:/ti/tivaware_c_series_2_1_4_178/driverlib/timer.h:
 
 C:/ti/tivaware_c_series_2_1_4_178/driverlib/interrupt.h:
 
-../led_task.h:
+C:/ti/tivaware_c_series_2_1_4_178/inc/hw_pwm.h:
 
-../switch_task.h:
+C:/ti/tivaware_c_series_2_1_4_178/inc/hw_sysctl.h:
+
+C:/ti/tivaware_c_series_2_1_4_178/driverlib/pwm.h:
+
+C:/ti/tivaware_c_series_2_1_4_178/driverlib/rom_map.h:
 
 ../keypad_task.h:
 
 ../menu_task.h:
+
+../temp_task.h:
+
+../pwm.h:
 

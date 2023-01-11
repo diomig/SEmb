@@ -23,8 +23,6 @@ menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/sysctl.h
 menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/gpio.h
 menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/rom.h
 menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/examples/boards/ek-tm4c123gxl/drivers/buttons.h
-menu_task.obj: ../switch_task.h
-menu_task.obj: ../led_task.h
 menu_task.obj: ../priorities.h
 menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/FreeRTOS.h
 menu_task.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stddef.h
@@ -88,10 +86,6 @@ C:/ti/tivaware_c_series_2_1_4_178/driverlib/gpio.h:
 C:/ti/tivaware_c_series_2_1_4_178/driverlib/rom.h:
 
 C:/ti/tivaware_c_series_2_1_4_178/examples/boards/ek-tm4c123gxl/drivers/buttons.h:
-
-../switch_task.h:
-
-../led_task.h:
 
 ../priorities.h:
 

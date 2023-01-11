@@ -13,8 +13,12 @@ uint32_t MenuTaskInit(void);
 
 int date_setup(void);
 int time_setup(void);
-void menu(uint8_t key);
-
+void menu(uint8_t key, int* resettime);
 float ReadTemp (void);
+int getTime();
+void showTime(int resetTime);
+void showTemperature();
+uint8_t setMaxTemp(void);
+uint8_t setMinTemp(void);
 
 #endif /* MENU_TASK_H_ */

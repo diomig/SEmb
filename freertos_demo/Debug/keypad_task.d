@@ -20,8 +20,6 @@ keypad_task.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/gpio.h
 keypad_task.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/rom.h
 keypad_task.obj: C:/ti/tivaware_c_series_2_1_4_178/examples/boards/ek-tm4c123gxl/drivers/buttons.h
 keypad_task.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/timer.h
-keypad_task.obj: ../switch_task.h
-keypad_task.obj: ../led_task.h
 keypad_task.obj: ../priorities.h
 keypad_task.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/FreeRTOS.h
 keypad_task.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stddef.h
@@ -77,10 +75,6 @@ C:/ti/tivaware_c_series_2_1_4_178/driverlib/rom.h:
 C:/ti/tivaware_c_series_2_1_4_178/examples/boards/ek-tm4c123gxl/drivers/buttons.h:
 
 C:/ti/tivaware_c_series_2_1_4_178/driverlib/timer.h:
-
-../switch_task.h:
-
-../led_task.h:
 
 ../priorities.h:
 

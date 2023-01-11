@@ -13,11 +13,11 @@ ORDERED_OBJS += \
 "./i2c.obj" \
 "./keypad_task.obj" \
 "./lcd.obj" \
-"./led_task.obj" \
 "./main.obj" \
 "./menu_task.obj" \
+"./pwm.obj" \
 "./startup_ccs.obj" \
-"./switch_task.obj" \
+"./temp_task.obj" \
 "./drivers/buttons.obj" \
 "./drivers/rgb.obj" \
 "./third_party/FreeRTOS/Source/list.obj" \
@@ -183,8 +183,8 @@ freertos_demo.bin: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "i2c.obj" "keypad_task.obj" "lcd.obj" "led_task.obj" "main.obj" "menu_task.obj" "startup_ccs.obj" "switch_task.obj" "drivers\buttons.obj" "drivers\rgb.obj" "third_party\FreeRTOS\Source\list.obj" "third_party\FreeRTOS\Source\queue.obj" "third_party\FreeRTOS\Source\tasks.obj" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\port.obj" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\portasm.obj" "third_party\FreeRTOS\Source\portable\MemMang\heap_2.obj" "utils\uartstdio.obj" "utils\ustdlib.obj" 
-	-$(RM) "i2c.d" "keypad_task.d" "lcd.d" "led_task.d" "main.d" "menu_task.d" "startup_ccs.d" "switch_task.d" "drivers\buttons.d" "drivers\rgb.d" "third_party\FreeRTOS\Source\list.d" "third_party\FreeRTOS\Source\queue.d" "third_party\FreeRTOS\Source\tasks.d" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\port.d" "third_party\FreeRTOS\Source\portable\MemMang\heap_2.d" "utils\uartstdio.d" "utils\ustdlib.d" 
+	-$(RM) "i2c.obj" "keypad_task.obj" "lcd.obj" "main.obj" "menu_task.obj" "pwm.obj" "startup_ccs.obj" "temp_task.obj" "drivers\buttons.obj" "drivers\rgb.obj" "third_party\FreeRTOS\Source\list.obj" "third_party\FreeRTOS\Source\queue.obj" "third_party\FreeRTOS\Source\tasks.obj" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\port.obj" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\portasm.obj" "third_party\FreeRTOS\Source\portable\MemMang\heap_2.obj" "utils\uartstdio.obj" "utils\ustdlib.obj" 
+	-$(RM) "i2c.d" "keypad_task.d" "lcd.d" "main.d" "menu_task.d" "pwm.d" "startup_ccs.d" "temp_task.d" "drivers\buttons.d" "drivers\rgb.d" "third_party\FreeRTOS\Source\list.d" "third_party\FreeRTOS\Source\queue.d" "third_party\FreeRTOS\Source\tasks.d" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\port.d" "third_party\FreeRTOS\Source\portable\MemMang\heap_2.d" "utils\uartstdio.d" "utils\ustdlib.d" 
 	-$(RM) "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\portasm.d" 
 	-@echo 'Finished clean'
 	-@echo ' '

@@ -41,12 +41,16 @@
 #include "driverlib/debug.h"
 #include "driverlib/timer.h"
 #include "driverlib/interrupt.h"
+#include "inc/hw_ints.h"
+#include "inc/hw_pwm.h"
+#include "inc/hw_sysctl.h"
+#include "driverlib/pwm.h"
+#include "driverlib/rom_map.h"
 
-
-#include "led_task.h"
-#include "switch_task.h"
 #include "keypad_task.h"
 #include "menu_task.h"
+#include "temp_task.h"
+#include "pwm.h"
 
 //*****************************************************************************
 //
@@ -91,6 +95,9 @@ void DebounceHandler();
 
 void pinConfiguration(void);
 void timerConfiguration(void);
+
+
+void PWMInit (void);
 
 //*****************************************************************************
 //
@@ -150,22 +157,27 @@ main(void)
     lcd_init();
     lcd_clear();
     lcd_put_cur(0);
-
+    PWMInit();
 
     // Print demo introduction.
     //printf("\n\nWelcome to the EK-TM4C123GXL FreeRTOS Demo!\n");
 
+
+    // Create the temperature control task.
+    if(!TempTaskInit()) {
+        while(1) {}
+    }
 
     // Create the Keypad task.
     if(!KeypadTaskInit()) {
         while(1) {}
     }
 
-
     // Create the menu task.
     if(!MenuTaskInit()) {
         while(1) {}
     }
+
 
 
     // Start the scheduler.  This should not return.
@@ -193,6 +205,7 @@ void pinConfiguration(void) {
         // Enable the GPIO port that is used for the on-board LED.
         //
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
@@ -204,12 +217,11 @@ void pinConfiguration(void) {
         //
         // Check if the peripheral access is enabled.
         //
-        while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOD))
-        {
-        }
-        while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOE))
-        {
-        }
+        while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOA));
+        while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOB));
+        while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOC));
+        while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOD));
+        while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOE));
 
         GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE, GPIO_PIN_2|GPIO_PIN_3);
         GPIOPinTypeGPIOOutput(GPIO_PORTC_BASE, 0xF0);
@@ -241,4 +253,7 @@ void DebounceHandler(){
 
     GPIOIntEnable(GPIO_PORTD_BASE, 0x0F);   //reactivate keypad interrupts
 }
+
+
+
 

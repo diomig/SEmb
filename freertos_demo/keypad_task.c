@@ -16,8 +16,6 @@
 #include "driverlib/rom.h"
 #include "drivers/buttons.h"
 #include "driverlib/timer.h"
-#include "switch_task.h"
-#include "led_task.h"
 #include "priorities.h"
 #include "FreeRTOS.h"
 #include "task.h"
@@ -45,7 +43,7 @@ const uint8_t keypad[4][4] = {    {'1','2','3','F'},
 // The stack size for the display task.
 //
 //*****************************************************************************
-#define KEYPADTASKSTACKSIZE        128         // Stack size in words
+#define KEYPADTASKSTACKSIZE        1000         // Stack size in words
 
 xQueueHandle  keypadQueue;
 
@@ -55,7 +53,8 @@ xQueueHandle  keypadQueue;
 //
 //*****************************************************************************
 
-
+int lastState = 0;
+int currentState = 0;
 
 void KeypadInterruptHandler(void) {
     static portBASE_TYPE xHigherPriorityTaskWoken;
@@ -64,13 +63,16 @@ void KeypadInterruptHandler(void) {
     int status = GPIOIntStatus(GPIO_PORTD_BASE,true);
     GPIOIntClear(GPIO_PORTD_BASE,status);
 
-    GPIOIntDisable(GPIO_PORTD_BASE, 0x0F);   //temporarily disable interrupts for debounce
-    TimerLoadSet(TIMER0_BASE, TIMER_A, 0xFFFF);
-    TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-
-
+    //GPIOIntDisable(GPIO_PORTD_BASE, 0x0F);   //temporarily disable interrupts for debounce
+    //TimerLoadSet(TIMER0_BASE, TIMER_A, 0xFFFF);
+    //TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
+    delay_ms(20);
+    currentState = (GPIOPinRead(GPIO_PORTD_BASE, 0x0F)!=0);
     /* 'Give' the semaphore to unblock the task. */
-    xSemaphoreGiveFromISR( keypadSemaphore, &xHigherPriorityTaskWoken );
+    if (lastState == 0 && currentState==1){
+        xSemaphoreGiveFromISR( keypadSemaphore, &xHigherPriorityTaskWoken );
+    }
+    lastState = currentState;
 
     if( xHigherPriorityTaskWoken == pdTRUE ) {
         /* Giving the semaphore unblocked a task, and the priority of the unblocked task
@@ -107,14 +109,17 @@ KeypadHandlerTask(void *pvParameters)
             key = keypad[row][column];
 
         GPIOPinWrite(GPIO_PORTE_BASE, 0x0F, 0x0F);
-        row = 0;
-        column = 0;
+
         //GPIOIntEnable(GPIO_PORTD_BASE, 0x0F);   //reactivate keypad interrupts
 
         // Pass the value of the key pressed to the menu task
 
-        if (keyIsValid(key))
+        if (keyIsValid(key)) {
+            vTaskDelay(40);
+            currentState = 0;
+            lastState = 0;
             xQueueSend(keypadQueue, &key, 0);
+        }
 
         //GPIOIntEnable(GPIO_PORTD_BASE, 0x0F);   //reactivate keypad interrupts
     }
@@ -125,6 +130,10 @@ int keyIsValid(uint8_t key){
     if (key < '0' || key > 'F')
         return 0;
     return 1;
+}
+
+int  keyIsNumber(uint8_t key) {
+    return (key >= '0' && key <= '9');
 }
 
 //************************************************************************************

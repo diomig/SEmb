@@ -20,6 +20,6 @@ int8_t getColumn(uint8_t rowbits);
 int8_t getRow(uint8_t colbits);
 int8_t bitsToIndex(int8_t bits);
 int keyIsValid(uint8_t key);
-
+int  keyIsNumber(uint8_t key);
 
 #endif /* KEYPAD_TASK_H_ */

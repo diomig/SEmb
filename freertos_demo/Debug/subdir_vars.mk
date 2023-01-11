@@ -12,60 +12,60 @@ C_SRCS += \
 ../i2c.c \
 ../keypad_task.c \
 ../lcd.c \
-../led_task.c \
 ../main.c \
 ../menu_task.c \
+../pwm.c \
 ../startup_ccs.c \
-../switch_task.c 
+../temp_task.c 
 
 C_DEPS += \
 ./i2c.d \
 ./keypad_task.d \
 ./lcd.d \
-./led_task.d \
 ./main.d \
 ./menu_task.d \
+./pwm.d \
 ./startup_ccs.d \
-./switch_task.d 
+./temp_task.d 
 
 OBJS += \
 ./i2c.obj \
 ./keypad_task.obj \
 ./lcd.obj \
-./led_task.obj \
 ./main.obj \
 ./menu_task.obj \
+./pwm.obj \
 ./startup_ccs.obj \
-./switch_task.obj 
+./temp_task.obj 
 
 OBJS__QUOTED += \
 "i2c.obj" \
 "keypad_task.obj" \
 "lcd.obj" \
-"led_task.obj" \
 "main.obj" \
 "menu_task.obj" \
+"pwm.obj" \
 "startup_ccs.obj" \
-"switch_task.obj" 
+"temp_task.obj" 
 
 C_DEPS__QUOTED += \
 "i2c.d" \
 "keypad_task.d" \
 "lcd.d" \
-"led_task.d" \
 "main.d" \
 "menu_task.d" \
+"pwm.d" \
 "startup_ccs.d" \
-"switch_task.d" 
+"temp_task.d" 
 
 C_SRCS__QUOTED += \
 "../i2c.c" \
 "../keypad_task.c" \
 "../lcd.c" \
-"../led_task.c" \
 "../main.c" \
 "../menu_task.c" \
+"../pwm.c" \
 "../startup_ccs.c" \
-"../switch_task.c" 
+"../temp_task.c" 
 
 
