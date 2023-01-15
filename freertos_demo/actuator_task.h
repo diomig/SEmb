@@ -28,6 +28,7 @@
 #include "menu_task.h"
 #include "lcd.h"
 #include "i2c.h"
+#include "pwm.h"
 
 
 
@@ -40,5 +41,7 @@ typedef struct message{
     int msg_id;
     int msg_value;
 }MESSAGE;
+
+uint32_t ActuatorTaskInit(void);
 
 #endif /* ACTUATOR_TASK_H_ */

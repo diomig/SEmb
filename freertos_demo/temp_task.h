@@ -12,5 +12,6 @@ extern uint32_t TempTaskInit(void);
 
 
 int checkLimits(bool* alarmON);
+int getFanPWM(float motorTemp);
 
 #endif /* TEMP_TASK_H_ */

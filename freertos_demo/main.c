@@ -50,6 +50,7 @@
 #include "keypad_task.h"
 #include "menu_task.h"
 #include "temp_task.h"
+#include "actuator_task.h"
 #include "pwm.h"
 
 //*****************************************************************************

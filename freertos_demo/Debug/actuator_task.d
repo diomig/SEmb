@@ -41,6 +41,7 @@ actuator_task.obj: ../keypad_task.h
 actuator_task.obj: ../menu_task.h
 actuator_task.obj: ../lcd.h
 actuator_task.obj: ../i2c.h
+actuator_task.obj: ../pwm.h
 
 ../actuator_task.c:
 
@@ -123,4 +124,6 @@ C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/semphr.h:
 ../lcd.h:
 
 ../i2c.h:
+
+../pwm.h:
 

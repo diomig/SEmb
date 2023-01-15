@@ -43,6 +43,9 @@ ActuatorTask(void *pvParameters)
         else if(message.msg_id == ID_ALARM_FREQUENCY){
             setSpeaker(message.msg_value);
         }
+        else if(message.msg_id == ID_ALARM_MUTE){
+            stopSeaker();
+        }
         else
             while(1);
 

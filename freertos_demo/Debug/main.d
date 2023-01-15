@@ -45,6 +45,14 @@ main.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/rom_map.h
 main.obj: ../keypad_task.h
 main.obj: ../menu_task.h
 main.obj: ../temp_task.h
+main.obj: ../actuator_task.h
+main.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdio.h
+main.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/string.h
+main.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/xlocale/_string.h
+main.obj: C:/ti/tivaware_c_series_2_1_4_178/inc/hw_gpio.h
+main.obj: C:/ti/tivaware_c_series_2_1_4_178/examples/boards/ek-tm4c123gxl/drivers/buttons.h
+main.obj: ../priorities.h
+main.obj: ../i2c.h
 main.obj: ../pwm.h
 
 ../main.c:
@@ -136,6 +144,22 @@ C:/ti/tivaware_c_series_2_1_4_178/driverlib/rom_map.h:
 ../menu_task.h:
 
 ../temp_task.h:
+
+../actuator_task.h:
+
+C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdio.h:
+
+C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/string.h:
+
+C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/xlocale/_string.h:
+
+C:/ti/tivaware_c_series_2_1_4_178/inc/hw_gpio.h:
+
+C:/ti/tivaware_c_series_2_1_4_178/examples/boards/ek-tm4c123gxl/drivers/buttons.h:
+
+../priorities.h:
+
+../i2c.h:
 
 ../pwm.h:
 

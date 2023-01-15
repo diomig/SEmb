@@ -19,10 +19,12 @@ menu_task.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/xl
 menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/inc/hw_memmap.h
 menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/inc/hw_types.h
 menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/inc/hw_gpio.h
+menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/inc/hw_can.h
 menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/sysctl.h
 menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/gpio.h
 menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/rom.h
 menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/examples/boards/ek-tm4c123gxl/drivers/buttons.h
+menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/can.h
 menu_task.obj: ../priorities.h
 menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/FreeRTOS.h
 menu_task.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stddef.h
@@ -41,6 +43,10 @@ menu_task.obj: ../menu_task.h
 menu_task.obj: ../lcd.h
 menu_task.obj: ../i2c.h
 menu_task.obj: ../actuator_task.h
+menu_task.obj: ../pwm.h
+menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/inc/hw_ints.h
+menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/interrupt.h
+menu_task.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/pin_map.h
 
 ../menu_task.c:
 
@@ -80,6 +86,8 @@ C:/ti/tivaware_c_series_2_1_4_178/inc/hw_types.h:
 
 C:/ti/tivaware_c_series_2_1_4_178/inc/hw_gpio.h:
 
+C:/ti/tivaware_c_series_2_1_4_178/inc/hw_can.h:
+
 C:/ti/tivaware_c_series_2_1_4_178/driverlib/sysctl.h:
 
 C:/ti/tivaware_c_series_2_1_4_178/driverlib/gpio.h:
@@ -87,6 +95,8 @@ C:/ti/tivaware_c_series_2_1_4_178/driverlib/gpio.h:
 C:/ti/tivaware_c_series_2_1_4_178/driverlib/rom.h:
 
 C:/ti/tivaware_c_series_2_1_4_178/examples/boards/ek-tm4c123gxl/drivers/buttons.h:
+
+C:/ti/tivaware_c_series_2_1_4_178/driverlib/can.h:
 
 ../priorities.h:
 
@@ -123,4 +133,12 @@ C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/semphr.h:
 ../i2c.h:
 
 ../actuator_task.h:
+
+../pwm.h:
+
+C:/ti/tivaware_c_series_2_1_4_178/inc/hw_ints.h:
+
+C:/ti/tivaware_c_series_2_1_4_178/driverlib/interrupt.h:
+
+C:/ti/tivaware_c_series_2_1_4_178/driverlib/pin_map.h:
 

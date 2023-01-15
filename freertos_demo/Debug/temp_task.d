@@ -43,6 +43,7 @@ temp_task.obj: ../i2c.h
 temp_task.obj: ../keypad_task.h
 temp_task.obj: ../temp_task.h
 temp_task.obj: ../pwm.h
+temp_task.obj: ../actuator_task.h
 
 ../temp_task.c:
 
@@ -129,4 +130,6 @@ C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/semphr.h:
 ../temp_task.h:
 
 ../pwm.h:
+
+../actuator_task.h:
 

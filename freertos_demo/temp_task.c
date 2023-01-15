@@ -46,7 +46,8 @@
 //*****************************************************************************
 #define TEMPTASKSTACKSIZE        1000         // Stack size in words
 
-xQueueHandle  TempQueue;
+extern xQueueHandle msgQueue;
+//xQueueHandle  TempQueue;
 extern xQueueHandle keypadQueue;
 
 xSemaphoreHandle LCDMutex;
@@ -85,10 +86,11 @@ static void TempTask(void *pvParameters) {
         xSemaphoreGive(tempMutex);
 
         //setFan(MaxTEMP);
+        /*
         message.msg_id = ID_MOTOR_DUTY_CYCLE;
-        message.msg_value = MaxTEMP
-        xQueueSend(msgQueue, )
-
+        message.msg_value = getFanPWM(motorTemp);
+        xQueueSend(msgQueue, &message, 0);
+*/
 //        checkLimits(&alarmON);
 
 
@@ -168,4 +170,12 @@ uint32_t TempTaskInit(void) {
 
     // Success.
     return(1);
+}
+
+
+
+
+int getFanPWM(float motorTemp) {
+
+    return ((int)((motorTemp-MinTEMP)*100)/(MaxTEMP-MinTEMP));
 }

@@ -5,10 +5,12 @@
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "inc/hw_gpio.h"
+#include "inc/hw_can.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/gpio.h"
 #include "driverlib/rom.h"
 #include "drivers/buttons.h"
+#include "driverlib/can.h"
 #include "priorities.h"
 #include "FreeRTOS.h"
 #include "task.h"
@@ -19,6 +21,12 @@
 #include "lcd.h"
 #include "i2c.h"
 #include "actuator_task.h"
+
+
+
+#include "inc/hw_ints.h"
+#include "driverlib/interrupt.h"
+#include "driverlib/pin_map.h"
 
 //*****************************************************************************
 //
@@ -36,22 +44,92 @@ extern uint8_t MaxTEMP;
 
 extern xSemaphoreHandle LCDMutex;
 extern xSemaphoreHandle tempMutex;
+
+
+
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+volatile uint32_t g_ui32MsgCount = 0;
+volatile bool g_bErrFlag = 0;
+
+void CANIntHandler(void) {
+    uint32_t ui32Status;
+    ui32Status = CANIntStatus(CAN0_BASE, CAN_INT_STS_CAUSE);
+
+    if(ui32Status == CAN_INT_INTID_STATUS) {
+        ui32Status = CANStatusGet(CAN0_BASE, CAN_STS_CONTROL);
+        //g_bErrFlag = 1;
+    }
+    else if(ui32Status == 1) {
+        CANIntClear(CAN0_BASE, 1);
+        //g_ui32MsgCount++;
+        //g_bErrFlag = 0;
+    }
+    else {
+        // Spurious interrupt handling can go here.
+    }
+}
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+tCANMsgObject sCANMessage;
+
+
+
+
 //*****************************************************************************
 //
 // This task reads the buttons' state and passes this information to LEDTask.
 //
 //*****************************************************************************
-static void
-MenuTask(void *pvParameters)
-{
+static void MenuTask(void *pvParameters) {
+
+
+    uint32_t ui32MsgData;
+    uint8_t *pui8MsgData;
+    pui8MsgData = (uint8_t *)&ui32MsgData;
+
+
+
+
+
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    GPIOPinConfigure(GPIO_PB4_CAN0RX);
+    GPIOPinConfigure(GPIO_PB5_CAN0TX);
+
+    GPIOPinTypeCAN(GPIO_PORTB_BASE, GPIO_PIN_4 | GPIO_PIN_5);
+
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_CAN0);
+
+    CANInit(CAN0_BASE);
+
+    CANBitRateSet(CAN0_BASE, SysCtlClockGet(), 500000);
+
+    CANIntRegister(CAN0_BASE, CANIntHandler);
+    //CANIntEnable(CAN0_BASE, CAN_INT_MASTER | CAN_INT_ERROR | CAN_INT_STATUS);
+    IntEnable(INT_CAN0);
+    CANEnable(CAN0_BASE);
+
+    ui32MsgData = 0;
+    sCANMessage.ui32MsgID = 1;
+    sCANMessage.ui32MsgIDMask = 0;
+    sCANMessage.ui32Flags = MSG_OBJ_TX_INT_ENABLE;
+    sCANMessage.ui32MsgLen = sizeof(pui8MsgData);
+    sCANMessage.pui8MsgData = pui8MsgData;
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
     uint8_t key;
-    int ticks;
-    float temp;
-    char tempstr[20];
-    int time, date;
+    //int ticks;
+    //float temp;
+    //char tempstr[20];
+    //int time, date;
 
 
-    int resetDate = date_setup();
+    int resetDate[8];
+    date_setup(resetDate);
     int resetTime = time_setup();
 
     lcd_clear();
@@ -63,7 +141,7 @@ MenuTask(void *pvParameters)
     // Loop forever.
     while(1)
     {
-        showTime(getTime(resetTime));
+        showTime(getTime(resetTime), resetDate);
         if (xQueueReceive(keypadQueue, &key, 0) == pdPASS){
             menu(key, &resetTime);
         }
@@ -137,46 +215,38 @@ void menu(uint8_t key, int* resettime){
         lcd_clear();
         xSemaphoreGive(LCDMutex);
         break;
-
-        //---------------------------------------------------------------
-    case '1':
-        message.msg_id = 1;
-        message.msg_value = 20;
-        xQueueSend(msgQueue, &message, 0);
-        break;
-    case '2':
-        message.msg_id = 1;
-        message.msg_value = 50;
-        xQueueSend(msgQueue, &message, 0);
-        break;
-    case '3':
-        message.msg_id = 1;
-        message.msg_value = 70;
-        xQueueSend(msgQueue, &message, 0);
-        break;
-    case '4':
-        message.msg_id = 2;
-        message.msg_value = 500;
-        xQueueSend(msgQueue, &message, 0);
-        break;
-
     default:
-        //xSemaphoreTake(LCDMutex, portMAX_DELAY);
-        //lcd_send_data(key);
-        //showTime(getTime(*resettime));
-        //xSemaphoreGive(LCDMutex);
-
+        message.msg_id = ID_MOTOR_DUTY_CYCLE;
+        message.msg_value = (key-'0')*10;
+        xQueueSend(msgQueue, &message, 0);
     }
     key = 0;
 }
 
+int dateIsValid(uint8_t digit, int* date, int position){
+    int max[8] = {1, 9, 3, 9, 9, 9, 9, 9};
+    if(digit > max[position]){
+        return 0;
+    }
+    if (position == 1){
+        if (digit + date[0]*10 <1 || digit + date[0]*10 > 12){
+            return 0;
+        }
+    }
+    if (position == 3){
+        if (digit + date[2]*10 > 31){
+            return 0;
+        }
+    }
 
-int date_setup(void){
-    uint8_t key, previouskey;
+    return 1;
+}
+
+
+void date_setup(int* Date){
+    uint8_t key  ;
     int i = 0;
-    int date;
     int position[8] = {6,7,9,10,12,13,14,15};
-    int ord_mag[8] = {100000,10000,10000000,100000000,1000,100,10,1};
     xSemaphoreTake(LCDMutex, portMAX_DELAY);
     lcd_clear();
     lcd_put_cur(0);
@@ -189,30 +259,46 @@ int date_setup(void){
         if(key == 'C'){
             i --;
             if(i<0){i=0;}
-            date -= (previouskey - '0') * ord_mag[i];   //cancel last assignment
             continue;
         }
-        else if(key < 'A'){
+        else if(keyIsNumber(key)){
+            if (!dateIsValid(key-'0', Date, i)){continue;}
             lcd_send_data(key);
-            date += (key - '0')*ord_mag[i];
+            Date[i] = key-'0';
         }
         else {
             continue;
         }
-        previouskey = key;
+
         i++;
     }
     lcd_clear();
     xSemaphoreGive(LCDMutex);
 
-    return date;
 }
+
+
+int timeIsValid(uint8_t digit, int time, int position){
+    int max_seconds = 86399;    //24*3600-1
+    int max[6] = {2, 9, 5, 9, 5, 9};
+    int ord_mag[6] = {36000,3600,600,60,10,1};
+    if(digit > max[position]){
+        return 0;
+    }
+    if (time + digit*ord_mag[position] > max_seconds){
+        return 0;
+    }
+    return 1;
+}
+
+
 int time_setup(void){
     uint8_t key, previouskey;
     int i = 0;
     int time=0;
     int position[6] = {6,7,9,10,12,13};
     int ord_mag[6] = {36000,3600,600,60,10,1};
+
     xSemaphoreTake(LCDMutex, portMAX_DELAY);
     lcd_clear();
     lcd_put_cur(0);
@@ -228,6 +314,7 @@ int time_setup(void){
             continue;
         }
         else if(keyIsNumber(key)){
+            if (!timeIsValid(key-'0', time, i)){continue;}
             lcd_send_data(key);
             time += (key - '0') * ord_mag[i];
         }
@@ -290,8 +377,8 @@ void showTemperature(){
 
 
 uint8_t setMaxTemp() {
-    uint8_t maxtemp = MaxTEMP;
-    uint8_t key, i = 0;
+    uint16_t maxtemp = MaxTEMP;
+    uint8_t key, previouskey = 0, i = 0;
     char msg[21];
     const int magnitude[3] = {100, 10, 1};
     xSemaphoreTake(LCDMutex, portMAX_DELAY);
@@ -308,12 +395,27 @@ uint8_t setMaxTemp() {
         if(keyIsNumber(key)){
             lcd_send_data(key);
             maxtemp += (key-'0')*magnitude[i];
+            previouskey = key;
             i++;
         }
+        else if (key == 'C'){
+            i--;
+            maxtemp -= (previouskey-'0')*magnitude[i];
+        }
     }
+
     lcd_clear();
 
     xSemaphoreGive(LCDMutex);
+
+    if (maxtemp <= MinTEMP){
+        xSemaphoreTake(LCDMutex, portMAX_DELAY);
+        lcd_put_cur(0);
+        lcd_send_string("Tmax <= Tmin!!!");
+        xSemaphoreGive(LCDMutex);
+        vTaskDelay(1000);
+        maxtemp = setMaxTemp();
+    }
 
     return maxtemp;
 }
@@ -321,7 +423,7 @@ uint8_t setMaxTemp() {
 
 uint8_t setMinTemp() {
     uint8_t mintemp = MinTEMP;
-    uint8_t key, i = 0;
+    uint8_t key, previouskey = 0, i = 0;
     char msg[21];
     const int magnitude[3] = {100, 10, 1};
     xSemaphoreTake(LCDMutex, portMAX_DELAY);
@@ -338,21 +440,40 @@ uint8_t setMinTemp() {
         if(keyIsNumber(key)){
             lcd_send_data(key);
             mintemp += (key-'0')*magnitude[i];
+            previouskey = key;
             i++;
+        }
+        else if(key == 'C'){
+            i--;
+            mintemp -= (previouskey-'0')*magnitude[i];
         }
     }
     lcd_clear();
 
     xSemaphoreGive(LCDMutex);
 
+
+    if (mintemp >= MaxTEMP){
+        xSemaphoreTake(LCDMutex, portMAX_DELAY);
+        lcd_put_cur(0);
+        lcd_send_string("Tmin >= Tmax!!!");
+        xSemaphoreGive(LCDMutex);
+        vTaskDelay(1000);
+        mintemp = setMinTemp();
+    }
+
+
+
     return mintemp;
 }
 
 
-void showTime(int time) {
+void showTime(int time, int* date) {
     char timestr[20];
-
-    sprintf(timestr, "%02d:%02d:%02d", time/3600%24, time/60%60, time%60);
+    int day = date[2]*10 + date[3];
+    int month = date[0]*10 + date[1];
+    char* month_name[12] = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"};
+    sprintf(timestr, "%02d:%02d:%02d      %02d %s", time/3600%24, time/60%60, time%60, day, month_name[month-1]);
     //sprintf(timestr, "%d", time);
     xSemaphoreTake(LCDMutex, portMAX_DELAY);
     lcd_put_cur(0);
