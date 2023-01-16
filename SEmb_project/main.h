@@ -1,3 +1,9 @@
+
+
+#ifndef MAIN_H_
+#define MAIN_H_
+
+
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -30,15 +36,10 @@
 #include "keypad_task.h"
 #include "menu_task.h"
 #include "temp_task.h"
+#include "actuator_task.h"
 #include "pwm.h"
 #include "i2c.h"
 #include "lcd.h"
-
-#ifndef MAIN_H_
-#define MAIN_H_
-
-
-
 
 
 #endif /* MAIN_H_ */

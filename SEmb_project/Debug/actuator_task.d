@@ -27,7 +27,7 @@ actuator_task.obj: C:/ti/tivaware_c_series_2_1_4_178/examples/boards/ek-tm4c123g
 actuator_task.obj: ../priorities.h
 actuator_task.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/FreeRTOS.h
 actuator_task.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stddef.h
-actuator_task.obj: C:/Users/diomi/OneDrive/Ambiente\ de\ Trabalho/IST\ -\ MSc/SEmb/Projeto\ SEmb/SoftwareECM/freertos_demo/FreeRTOSConfig.h
+actuator_task.obj: C:/Users/diomi/OneDrive/Ambiente\ de\ Trabalho/IST\ -\ MSc/SEmb/Projeto\ SEmb/SoftwareECM/SEmb_project/FreeRTOSConfig.h
 actuator_task.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/projdefs.h
 actuator_task.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/portable.h
 actuator_task.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/deprecated_definitions.h
@@ -38,8 +38,9 @@ actuator_task.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source
 actuator_task.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/queue.h
 actuator_task.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/semphr.h
 actuator_task.obj: ../keypad_task.h
-actuator_task.obj: ../menu_task.h
+actuator_task.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/timer.h
 actuator_task.obj: ../lcd.h
+actuator_task.obj: ../menu_task.h
 actuator_task.obj: ../i2c.h
 actuator_task.obj: ../pwm.h
 
@@ -97,7 +98,7 @@ C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/FreeRTOS.h
 
 C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stddef.h:
 
-C:/Users/diomi/OneDrive/Ambiente\ de\ Trabalho/IST\ -\ MSc/SEmb/Projeto\ SEmb/SoftwareECM/freertos_demo/FreeRTOSConfig.h:
+C:/Users/diomi/OneDrive/Ambiente\ de\ Trabalho/IST\ -\ MSc/SEmb/Projeto\ SEmb/SoftwareECM/SEmb_project/FreeRTOSConfig.h:
 
 C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/projdefs.h:
 
@@ -119,9 +120,11 @@ C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/semphr.h:
 
 ../keypad_task.h:
 
-../menu_task.h:
+C:/ti/tivaware_c_series_2_1_4_178/driverlib/timer.h:
 
 ../lcd.h:
+
+../menu_task.h:
 
 ../i2c.h:
 

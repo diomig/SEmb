@@ -16,7 +16,7 @@ third_party/FreeRTOS/Source/tasks.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-a
 third_party/FreeRTOS/Source/tasks.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/machine/_types.h
 third_party/FreeRTOS/Source/tasks.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/machine/_stdint.h
 third_party/FreeRTOS/Source/tasks.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/sys/_stdint.h
-third_party/FreeRTOS/Source/tasks.obj: C:/Users/diomi/OneDrive/Ambiente\ de\ Trabalho/IST\ -\ MSc/SEmb/Projeto\ SEmb/SoftwareECM/freertos_demo/FreeRTOSConfig.h
+third_party/FreeRTOS/Source/tasks.obj: C:/Users/diomi/OneDrive/Ambiente\ de\ Trabalho/IST\ -\ MSc/SEmb/Projeto\ SEmb/SoftwareECM/SEmb_project/FreeRTOSConfig.h
 third_party/FreeRTOS/Source/tasks.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/projdefs.h
 third_party/FreeRTOS/Source/tasks.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/portable.h
 third_party/FreeRTOS/Source/tasks.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/deprecated_definitions.h
@@ -59,7 +59,7 @@ C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/machine/_stdint.h
 
 C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/sys/_stdint.h:
 
-C:/Users/diomi/OneDrive/Ambiente\ de\ Trabalho/IST\ -\ MSc/SEmb/Projeto\ SEmb/SoftwareECM/freertos_demo/FreeRTOSConfig.h:
+C:/Users/diomi/OneDrive/Ambiente\ de\ Trabalho/IST\ -\ MSc/SEmb/Projeto\ SEmb/SoftwareECM/SEmb_project/FreeRTOSConfig.h:
 
 C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/projdefs.h:
 

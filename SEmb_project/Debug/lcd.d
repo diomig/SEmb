@@ -16,7 +16,7 @@ lcd.obj: C:/ti/tivaware_c_series_2_1_4_178/inc/hw_memmap.h
 lcd.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/debug.h
 lcd.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/gpio.h
 lcd.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/sysctl.h
-lcd.obj: C:/Users/diomi/OneDrive/Ambiente\ de\ Trabalho/IST\ -\ MSc/SEmb/Projeto\ SEmb/SoftwareECM/freertos_demo/lcd.h
+lcd.obj: C:/Users/diomi/OneDrive/Ambiente\ de\ Trabalho/IST\ -\ MSc/SEmb/Projeto\ SEmb/SoftwareECM/SEmb_project/lcd.h
 
 ../lcd.c:
 
@@ -50,5 +50,5 @@ C:/ti/tivaware_c_series_2_1_4_178/driverlib/gpio.h:
 
 C:/ti/tivaware_c_series_2_1_4_178/driverlib/sysctl.h:
 
-C:/Users/diomi/OneDrive/Ambiente\ de\ Trabalho/IST\ -\ MSc/SEmb/Projeto\ SEmb/SoftwareECM/freertos_demo/lcd.h:
+C:/Users/diomi/OneDrive/Ambiente\ de\ Trabalho/IST\ -\ MSc/SEmb/Projeto\ SEmb/SoftwareECM/SEmb_project/lcd.h:
 

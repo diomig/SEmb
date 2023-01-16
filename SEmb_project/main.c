@@ -22,36 +22,7 @@
 //
 //*****************************************************************************
 
-#include <stdbool.h>
-#include <stdint.h>
-#include "inc/hw_memmap.h"
-#include "inc/hw_types.h"
-#include "driverlib/gpio.h"
-#include "driverlib/pin_map.h"
-#include "driverlib/rom.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/uart.h"
-#include "utils/uartstdio.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "semphr.h"
-#include "lcd.h"
-#include "inc/hw_ints.h"
-#include "driverlib/debug.h"
-#include "driverlib/timer.h"
-#include "driverlib/interrupt.h"
-#include "inc/hw_ints.h"
-#include "inc/hw_pwm.h"
-#include "inc/hw_sysctl.h"
-#include "driverlib/pwm.h"
-#include "driverlib/rom_map.h"
-
-#include "keypad_task.h"
-#include "menu_task.h"
-#include "temp_task.h"
-#include "actuator_task.h"
-#include "pwm.h"
+#include "main.h"
 
 //*****************************************************************************
 //
@@ -153,12 +124,12 @@ main(void)
 
 
     timerConfiguration();
-    pinConfiguration();
+    pinConfiguration();     //configuracoes dos pins do Tiva
 
-    lcd_init();
+    lcd_init();     //inicializacao do LCD
     lcd_clear();
     lcd_put_cur(0);
-    PWMInit();
+    PWMInit();      //inicializacao do modulo PWM
 
 
 

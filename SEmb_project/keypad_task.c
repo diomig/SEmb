@@ -6,22 +6,6 @@
  */
 
 
-#include <stdbool.h>
-#include <stdint.h>
-#include "inc/hw_memmap.h"
-#include "inc/hw_types.h"
-#include "inc/hw_gpio.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/gpio.h"
-#include "driverlib/rom.h"
-#include "drivers/buttons.h"
-#include "driverlib/timer.h"
-#include "priorities.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "semphr.h"
-#include "lcd.h"
 
 #include "keypad_task.h"
 
@@ -32,6 +16,8 @@
 xSemaphoreHandle keypadSemaphore;
 //*****************************************************************************
 //*****************************************************************************
+
+//matriz do teclado
 const uint8_t keypad[4][4] = {    {'1','2','3','F'},
                                   {'4','5','6','E'},
                                   {'7','8','9','D'},
@@ -100,15 +86,15 @@ KeypadHandlerTask(void *pvParameters)
     while(1)
     {
         xSemaphoreTake(keypadSemaphore,portMAX_DELAY);
-        column = GPIOPinRead(GPIO_PORTD_BASE, 0x0F);
+        column = GPIOPinRead(GPIO_PORTD_BASE, 0x0F);    //mascara correspondente 'a coluna
         if (column != 0)
-            row = getRow(column);
-        column = bitsToIndex(column);
-        row = bitsToIndex(row);
+            row = getRow(column);                       //mascara correspondente 'a linha
+        column = bitsToIndex(column);                   //coluna da tecla premida
+        row = bitsToIndex(row);                         //linha da tecla premida
         if (row>=0 && row<=3 && column>=0 && column<=3)
-            key = keypad[row][column];
+            key = keypad[row][column];                  //tecla premida
 
-        GPIOPinWrite(GPIO_PORTE_BASE, 0x0F, 0x0F);
+        GPIOPinWrite(GPIO_PORTE_BASE, 0x0F, 0x0F);      //voltar a alimentar as linhas do teclado
 
         //GPIOIntEnable(GPIO_PORTD_BASE, 0x0F);   //reactivate keypad interrupts
 
@@ -118,20 +104,21 @@ KeypadHandlerTask(void *pvParameters)
             vTaskDelay(40);
             currentState = 0;
             lastState = 0;
-            xQueueSend(keypadQueue, &key, 0);
+            xQueueSend(keypadQueue, &key, 0);       //envia a tecla premida para a tarefa do menu
         }
 
         //GPIOIntEnable(GPIO_PORTD_BASE, 0x0F);   //reactivate keypad interrupts
     }
 }
 
-
+//verifica se key corresponde a uma tecla valida
 int keyIsValid(uint8_t key){
     if (key < '0' || key > 'F')
         return 0;
     return 1;
 }
 
+//verifica se a tecla premida e' um numero
 int  keyIsNumber(uint8_t key) {
     return (key >= '0' && key <= '9');
 }
@@ -147,18 +134,9 @@ int  keyIsNumber(uint8_t key) {
 uint32_t
 KeypadTaskInit(void)
 {
-    //
-    // Unlock the GPIO LOCK register for Right button to work.
-    //
-    //HWREG(GPIO_PORTF_BASE + GPIO_O_LOCK) = GPIO_LOCK_KEY;
-    //HWREG(GPIO_PORTF_BASE + GPIO_O_CR) = 0xFF;
+    keypadQueue = xQueueCreate(KEY_QUEUE_SIZE, KEY_ITEM_SIZE);  //cria a queue do teclado
 
-
-
-    keypadQueue = xQueueCreate(KEY_QUEUE_SIZE, KEY_ITEM_SIZE);
-
-    //keypadSemaphore = xSemaphoreCreateMutex();
-    vSemaphoreCreateBinary(keypadSemaphore);
+    vSemaphoreCreateBinary(keypadSemaphore);    //cria semaforo para a keypad handler task
     // Create the keypad task.
     if(xTaskCreate(KeypadHandlerTask, (const portCHAR *)"Keypad",
                    KEYPADTASKSTACKSIZE, NULL, tskIDLE_PRIORITY +
@@ -174,13 +152,14 @@ KeypadTaskInit(void)
 
 
 
-
+//obtem bits do porto das colunas
 int8_t getColumn(uint8_t rowbits) {
     GPIOPinWrite(GPIO_PORTE_BASE, 0x0F, rowbits);
 
     return GPIOPinRead(GPIO_PORTD_BASE, 0x0F);
 }
 
+//obtem bits do porto das linhas
 int8_t getRow(uint8_t colbits) {
     int8_t rowbits;
     for(rowbits = 1; rowbits <= 8; rowbits<<=1){
@@ -192,17 +171,18 @@ int8_t getRow(uint8_t colbits) {
     return 0;
 }
 
+//converte os bits do porto das linhas/colunas no indice correspondente
 int8_t bitsToIndex(int8_t bits){
     switch(bits) {
-    case 1:
+    case 1:         //0001 -> 0
         return 0;
-    case 2:
+    case 2:         //0010 -> 1
         return 1;
-    case 4:
+    case 4:         //0100 -> 2
         return 2;
-    case 8:
+    case 8:         //1000 -> 3
         return 3;
     default:
-        return -1;
+        return -1;  //invalido
     }
 }

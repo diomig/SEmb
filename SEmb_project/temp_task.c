@@ -6,30 +6,7 @@
  */
 
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include "inc/hw_memmap.h"
-#include "inc/hw_types.h"
-#include "inc/hw_gpio.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/gpio.h"
-#include "driverlib/rom.h"
-#include "drivers/buttons.h"
-#include "driverlib/timer.h"
-#include "priorities.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "semphr.h"
-#include "menu_task.h"
-#include "lcd.h"
-#include "i2c.h"
-#include "keypad_task.h"
-#include "temp_task.h"
-#include "pwm.h"
-#include "actuator_task.h"
+
 
 #define TEMP_ITEM_SIZE sizeof(uint16_t)
 #define TEMP_QUEUE_SIZE 10
@@ -75,37 +52,37 @@ static void TempTask(void *pvParameters) {
     tempMutex = xSemaphoreCreateMutex();
     fanMutex = xSemaphoreCreateMutex();
 
-    I2CInit();
+    I2CInit();      //inicializacao do I2C
 
-    I2CWriteConf(0x60);
+    I2CWriteConf(0x60); //configuracao do sensor de temperatura
 
     // Loop forever
     while(1){
         xSemaphoreTake(tempMutex, portMAX_DELAY);
-        motorTemp = ReadTemp();
+        motorTemp = ReadTemp(); //ler a temperatura do sensor
         temp = motorTemp;
         xSemaphoreGive(tempMutex);
 
-        if(checkLimits() == 0){
+        if(checkLimits() == 0){     //temperatura dentro dos limites definidos
             duty_cycle = temp_Duty_Cycle(temp);
             message.msg_id = ID_FAN_DUTY_CYCLE;
             message.msg_value = duty_cycle;
-            xQueueSend(msgQueue, &message, 0);
+            xQueueSend(msgQueue, &message, 0);  //define o duty cycle da ventoinha
             message.msg_id = ID_ALARM_MUTE;
-            xQueueSend(msgQueue, &message, 0);
+            xQueueSend(msgQueue, &message, 0);  //alarme desligado
         }
-        else if(checkLimits() == -1){
+        else if(checkLimits() == -1){   //temperatura abaixo de Tmin
             message.msg_id = ID_FAN_STOP;
-            xQueueSend(msgQueue, &message, 0);
+            xQueueSend(msgQueue, &message, 0);  //parar a ventoinha
             message.msg_id = ID_ALARM_MUTE;
-            xQueueSend(msgQueue, &message, 0);
+            xQueueSend(msgQueue, &message, 0);  //alarme desligado
         }
-        else if(checkLimits() == 1){
+        else if(checkLimits() == 1){    //temperatura acima de Tmax
             message.msg_id = ID_FAN_DUTY_CYCLE;
             message.msg_value = 100;
-            xQueueSend(msgQueue, &message, 0);
+            xQueueSend(msgQueue, &message, 0);  //ventoinha na velocidade maxima
             message.msg_id = ID_ALARM_SET;
-            xQueueSend(msgQueue, &message, 0);
+            xQueueSend(msgQueue, &message, 0);  //ligar o alarme
         }
 
         vTaskDelay(500);

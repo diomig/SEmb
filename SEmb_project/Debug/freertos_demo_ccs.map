@@ -1,9 +1,9 @@
 ******************************************************************************
                   TI ARM Linker PC v20.2.7                     
 ******************************************************************************
->> Linked Sun Jan 15 17:14:57 2023
+>> Linked Mon Jan 16 01:14:30 2023
 
-OUTPUT FILE NAME:   <freertos_demo.out>
+OUTPUT FILE NAME:   <SEmb_project.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 000044d1
 
 

@@ -1,32 +1,12 @@
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include "inc/hw_memmap.h"
-#include "inc/hw_types.h"
-#include "inc/hw_gpio.h"
-#include "inc/hw_can.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/gpio.h"
-#include "driverlib/rom.h"
-#include "drivers/buttons.h"
-#include "driverlib/can.h"
-#include "priorities.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "semphr.h"
-#include "keypad_task.h"
+/*
+ * menu_task.c
+ *
+ *  Created on: 04/01/2023
+ *      Author: diomi
+ */
+
+
 #include "menu_task.h"
-#include "lcd.h"
-#include "i2c.h"
-#include "actuator_task.h"
-
-
-
-#include "inc/hw_ints.h"
-#include "driverlib/interrupt.h"
-#include "driverlib/pin_map.h"
 
 //*****************************************************************************
 //
@@ -69,8 +49,8 @@ static void MenuTask(void *pvParameters) {
 
 
 
-    date_setup(resetDate);
-    resetTime = time_setup();
+    date_setup(resetDate);      //setup da data
+    resetTime = time_setup();   //setup da hora
 
 
     I2CInit();
@@ -86,16 +66,16 @@ static void MenuTask(void *pvParameters) {
     do{
         xQueueReceive(keypadQueue, &key, portMAX_DELAY);
     }
-    while(key != STARTBUTTON);
+    while(key != STARTBUTTON);  //espera que o utilizador introduza o comando START (tecla '0')
     message.msg_id = ID_START;
-    xQueueSend(msgQueue, &message, 0);
+    xQueueSend(msgQueue, &message, 0); //envia comando para a msgQueue
 
     // Loop forever.
     while(1)
     {
-        showTime(getTime(resetTime), resetDate);
-        if (xQueueReceive(keypadQueue, &key, 0) == pdPASS){
-            menu(key, &resetTime);
+        showTime(getTime(resetTime), resetDate);    //menu principal, mostra o tempo atual
+        if (xQueueReceive(keypadQueue, &key, 0) == pdPASS){ //não fica bloqueado aqui
+            menu(key, &resetTime);  //processa os menus de acordo com os inputs do utilizador
         }
     }
 }
@@ -133,28 +113,30 @@ void menu(uint8_t key, int* resettime){
     if (key==0) {return;}
 
     switch(key){
-    case 'A':
+    case 'A':   //mostrar temperatura
         showTemperature();
         break;
-    case 'B':
+    case 'B':   //mostrar duty cycle da ventoinha
         showFanSpeed();
         break;
-    case 'C':
+    case 'C':   //definir temperatura minima
         MinTEMP = setMinTemp();
         break;
-    case 'D':
+    case 'D':   //definir temperatura maxima
         MaxTEMP = setMaxTemp();
         break;
-    case 'E':
+    case 'E':   //redefinir hora
         *resettime = time_setup();
         break;
-    case 'F':
+    case 'F':   //redefinir data
         date_setup(resetDate);
         break;
+    /*
     default:
         message.msg_id = ID_FAN_DUTY_CYCLE;
         message.msg_value = (key-'0')*10;
         xQueueSend(msgQueue, &message, 0);
+    */
     }
     key = 0;
 }
@@ -299,8 +281,6 @@ void showTemperature(){
         lcd_put_cur(0);
         lcd_send_string(tempstr);
 
-        //vTaskDelay(1000);
-
         xQueueReceive(keypadQueue, &key, 500);
         if (keyIsValid(key)){
             loop = false;
@@ -437,7 +417,6 @@ void showFanSpeed(){
         lcd_put_cur(0);
         lcd_send_string(str);
 
-        //vTaskDelay(1000);
 
         xQueueReceive(keypadQueue, &key, 500);
         if (keyIsValid(key)){
